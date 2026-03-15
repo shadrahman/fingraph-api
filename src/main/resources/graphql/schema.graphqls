@@ -1,7 +1,10 @@
 type Query {
     me: User
     accountById(id: ID!): Account
-    recentTransactions(limit: Int): [Transaction]
+}
+
+type Mutation {
+    createTransaction(input: TransactionInput!): TransactionPayload
 }
 
 type User {
@@ -22,15 +25,29 @@ type Transaction {
     id: ID!
     amount: Float!
     description: String!
-    category: String!
+    category: Category!
+    isSubscription: Boolean!
+}
+
+input TransactionInput {
+    accountId: ID!
+    amount: Float!
+    description: String!
+    category: Category!
 }
 
 type TransactionPayload {
+    success: Boolean!
     transaction: Transaction
     account: Account
-    success: Boolean!
 }
 
-type Mutation {
-    createTransaction(accountId: ID!, amount: Float!, description: String!): TransactionPayload
+enum Category {
+    HOUSING
+    FOOD
+    TRANSPORT
+    ENTERTAINMENT
+    UTILITIES
+    INCOME
+    SUBSCRIPTION
 }

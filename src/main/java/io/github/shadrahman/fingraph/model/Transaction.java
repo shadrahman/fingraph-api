@@ -4,6 +4,6 @@ public record Transaction(
         String id,
         Double amount,
         String description,
-        String category
-) {
-}
+        Category category,
+        boolean isSubscription
+) {}

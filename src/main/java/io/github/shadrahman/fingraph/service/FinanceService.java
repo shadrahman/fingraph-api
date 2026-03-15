@@ -1,8 +1,6 @@
 package io.github.shadrahman.fingraph.service;
 
-import io.github.shadrahman.fingraph.model.Account;
-import io.github.shadrahman.fingraph.model.Transaction;
-import io.github.shadrahman.fingraph.model.TransactionPayload;
+import io.github.shadrahman.fingraph.model.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,20 +21,38 @@ public class FinanceService {
         return accounts.get(id);
     }
 
-    public TransactionPayload addTransaction(String accountId, Double amount, String desc) {
-        Account account = accounts.get(accountId);
+    public TransactionPayload addTransaction(TransactionInput input) {
+        Account account = accounts.get(input.accountId());
 
         if (account != null) {
-            var newTransaction = new Transaction(UUID.randomUUID().toString(), amount, desc, "ENTERTAINMENT");
-            var updatedBalance = account.balance() - amount;
+            var isDetectedSub = isSubscription(input.description());
+            var finalCategory = isDetectedSub ? Category.SUBSCRIPTION : input.category();
+
+            var newTransaction = new Transaction(UUID.randomUUID().toString(), input.amount(), input.description(), finalCategory, isDetectedSub);
             var updatedHistory = account.history();
             updatedHistory.add(0, newTransaction); // Add to the top of the list
-            var updatedAccount = new Account(accountId, account.name(), updatedBalance, updatedHistory);
+            var updatedBalance = account.balance() - input.amount();
+            var updatedAccount = new Account(account.id(), account.name(), updatedBalance, updatedHistory);
 
-            accounts.put(accountId, updatedAccount);
+            accounts.put(account.id(), updatedAccount);
 
             return new TransactionPayload(newTransaction, updatedAccount, true);
         }
         return new TransactionPayload(null, null, false);
+    }
+
+    /**
+     * Encapsulates the business rules for subscription detection.
+     */
+    private boolean isSubscription(String description) {
+        if (description == null) {
+            return false;
+        }
+
+        String desc = description.toLowerCase();
+        return desc.contains("netflix") ||
+                desc.contains("spotify") ||
+                desc.contains("gym") ||
+                desc.contains("amazon prime");
     }
 }

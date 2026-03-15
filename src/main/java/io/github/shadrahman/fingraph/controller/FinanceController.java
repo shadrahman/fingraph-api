@@ -1,9 +1,6 @@
 package io.github.shadrahman.fingraph.controller;
 
-import io.github.shadrahman.fingraph.model.Account;
-import io.github.shadrahman.fingraph.model.Transaction;
-import io.github.shadrahman.fingraph.model.TransactionPayload;
-import io.github.shadrahman.fingraph.model.User;
+import io.github.shadrahman.fingraph.model.*;
 import io.github.shadrahman.fingraph.service.FinanceService;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -52,9 +49,7 @@ public class FinanceController {
     }
 
     @MutationMapping
-    public TransactionPayload createTransaction(@Argument String accountId,
-                                                @Argument Double amount,
-                                                @Argument String description) {
-        return financeService.addTransaction(accountId, amount, description);
+    public TransactionPayload createTransaction(@Argument TransactionInput input) {
+        return financeService.addTransaction(input);
     }
 }

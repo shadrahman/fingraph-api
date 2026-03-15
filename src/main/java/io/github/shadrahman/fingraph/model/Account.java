@@ -7,5 +7,4 @@ public record Account(
         String name,
         Double balance,
         List<Transaction> history
-) {
-}
+) {}
