@@ -10,6 +10,8 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
+import static io.github.shadrahman.fingraph.service.TransactionService.CENTS_FACTOR;
+
 @Controller
 @RequiredArgsConstructor
 public class AccountController {
@@ -18,6 +20,11 @@ public class AccountController {
     @QueryMapping
     public Account accountById(@Argument String id) {
         return accountService.getAccountById(id);
+    }
+
+    @SchemaMapping(typeName = "Account", field = "balance")
+    public Double getBalanceInDollars(Account account) {
+        return account.balance() / (double) CENTS_FACTOR;
     }
 
     @SchemaMapping(typeName = "Account", field = "history")
