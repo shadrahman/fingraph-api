@@ -5,4 +5,5 @@ public record TransactionInput(
         Double amount,
         String description,
         Category category
-) {}
+) {
+}

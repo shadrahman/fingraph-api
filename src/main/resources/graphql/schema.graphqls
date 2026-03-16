@@ -12,6 +12,14 @@ type User {
     username: String!
     email: String!
     accounts: [Account]
+    totalNetWorth: Float!
+    monthlySubscriptionCommitted: Float!
+    monthlySpending(category: Category): [CategoryTotal!]
+}
+
+type CategoryTotal {
+    category: Category!
+    amount: Float!
 }
 
 type Account {
@@ -50,4 +58,5 @@ enum Category {
     UTILITIES
     INCOME
     SUBSCRIPTION
+    MISCELLANEOUS
 }

@@ -4,7 +4,9 @@ import java.util.List;
 
 public record Account(
         String id,
+        String userId,
         String name,
         Double balance,
         List<Transaction> history
-) {}
+) {
+}

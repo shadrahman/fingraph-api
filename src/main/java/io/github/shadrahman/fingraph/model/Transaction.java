@@ -6,4 +6,5 @@ public record Transaction(
         String description,
         Category category,
         boolean isSubscription
-) {}
+) {
+}

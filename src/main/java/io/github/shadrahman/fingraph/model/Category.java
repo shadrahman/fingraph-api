@@ -7,5 +7,6 @@ public enum Category {
     ENTERTAINMENT,
     UTILITIES,
     INCOME,
-    SUBSCRIPTION
+    SUBSCRIPTION,
+    MISCELLANEOUS
 }
