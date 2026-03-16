@@ -1,6 +1,7 @@
 package io.github.shadrahman.fingraph.service;
 
 import io.github.shadrahman.fingraph.model.Account;
+import io.github.shadrahman.fingraph.model.Category;
 import io.github.shadrahman.fingraph.model.TransactionInput;
 import io.github.shadrahman.fingraph.model.TransactionPayload;
 import java.util.ArrayList;
@@ -15,8 +16,8 @@ public class AccountService {
     private final Map<String, Account> accounts = new ConcurrentHashMap<>();
 
     public AccountService(TransactionService transactionService) {
-        accounts.put("acc-1", new Account("acc-1", "usr-123", "Main Checking", 1500.00, new ArrayList<>()));
-        accounts.put("acc-2", new Account("acc-2", "usr-123", "Savings", 5000.00, new ArrayList<>()));
+        accounts.put("acc-1", new Account("acc-1", "usr-123", "Checking", 150000L, new ArrayList<>()));
+        accounts.put("acc-2", new Account("acc-2", "usr-123", "Savings", 500000L, new ArrayList<>()));
         this.transactionService = transactionService;
     }
 
@@ -30,20 +31,20 @@ public class AccountService {
         return accounts.get(id);
     }
 
-    public TransactionPayload addTransaction(TransactionInput input) {
-        Account account = accounts.get(input.accountId());
+    public Account addTransaction(String accountId, Long amount, String description, Category category) {
+        Account account = accounts.get(accountId);
 
         if (account != null) {
-            var newTransaction = transactionService.createNewTransaction(input.amount(), input.description(), input.category());
+            var newTransaction = transactionService.createNewTransaction(amount, description, category);
             var updatedHistory = new ArrayList<>(account.history());
             updatedHistory.add(0, newTransaction); // Add to the top of the list
-            var updatedBalance = account.balance() - input.amount();
+            var updatedBalance = account.balance() - amount;
             var updatedAccount = new Account(account.id(), account.userId(), account.name(), updatedBalance, updatedHistory);
 
             accounts.put(account.id(), updatedAccount);
 
-            return new TransactionPayload(newTransaction, updatedAccount, true);
+            return updatedAccount;
         }
-        return new TransactionPayload(null, null, false);
+        return null;
     }
 }

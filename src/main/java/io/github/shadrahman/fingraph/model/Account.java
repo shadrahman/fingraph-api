@@ -6,7 +6,7 @@ public record Account(
         String id,
         String userId,
         String name,
-        Double balance,
+        Long balance,
         List<Transaction> history
 ) {
 }

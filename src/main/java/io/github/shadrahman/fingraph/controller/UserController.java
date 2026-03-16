@@ -11,6 +11,8 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
+import static io.github.shadrahman.fingraph.service.TransactionService.CENTS_FACTOR;
+
 @Controller
 @RequiredArgsConstructor
 public class UserController {
@@ -29,16 +31,19 @@ public class UserController {
 
     @SchemaMapping(typeName = "User", field = "totalNetWorth")
     public Double totalNetWorth(User user) {
-        return userService.calculateNetWorth(user.id());
+        return userService.calculateNetWorth(user.id()) / (double) CENTS_FACTOR;
     }
 
     @SchemaMapping(typeName = "User", field = "monthlySubscriptionCommitted")
     public Double monthlySubscriptionCommitted(User user) {
-        return userService.calculateMonthlySubscriptionCommitted(user.id());
+        return userService.calculateMonthlySubscriptionCommitted(user.id()) / (double) CENTS_FACTOR;
     }
 
     @SchemaMapping(typeName = "User", field = "monthlySpending")
     public List<CategoryTotal> monthlySpending(User user) {
-        return userService.getMonthlySpending(user.id());
+        return userService.getMonthlySpending(user.id())
+                          .entrySet().stream()
+                          .map(entry -> new CategoryTotal(entry.getKey(), entry.getValue() / (double) CENTS_FACTOR))
+                          .toList();
     }
 }

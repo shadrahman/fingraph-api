@@ -8,6 +8,8 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.stereotype.Controller;
 
+import static io.github.shadrahman.fingraph.service.TransactionService.CENTS_FACTOR;
+
 @Controller
 @RequiredArgsConstructor
 public class FinanceController {
@@ -15,6 +17,16 @@ public class FinanceController {
 
     @MutationMapping
     public TransactionPayload createTransaction(@Argument TransactionInput input) {
-        return accountService.addTransaction(input);
+        long amount = Math.round(input.amount() * CENTS_FACTOR);
+
+        var updatedAccount = accountService.addTransaction(
+                input.accountId(),
+                amount,
+                input.description(),
+                input.category());
+
+        return updatedAccount != null ?
+                new TransactionPayload(updatedAccount.history().get(0), updatedAccount, true) :
+                new TransactionPayload(null, null, false);
     }
 }

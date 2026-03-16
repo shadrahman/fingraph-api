@@ -10,11 +10,13 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class TransactionService {
+    public static final long CENTS_FACTOR = 100L;
     private static final Map<String, Category> MERCHANT_MAP = Map.ofEntries(
             Map.entry("coles", Category.FOOD),
             Map.entry("woolworths", Category.FOOD),
             Map.entry("aldi", Category.FOOD),
             Map.entry("iga", Category.FOOD),
+            Map.entry("woolworths caltex", Category.TRANSPORT),
             Map.entry("7-eleven", Category.TRANSPORT),
             Map.entry("ampol", Category.TRANSPORT),
             Map.entry("bp", Category.TRANSPORT),
@@ -34,7 +36,7 @@ public class TransactionService {
             Map.entry("bunnings", Category.SHOPPING)
     );
 
-    public Transaction createNewTransaction(Double amount, String description, Category userSuggestedCategory) {
+    public Transaction createNewTransaction(Long amount, String description, Category userSuggestedCategory) {
         Category finalCategory = determineCategory(description, userSuggestedCategory);
         boolean isSubscription = finalCategory == Category.SUBSCRIPTION;
 
