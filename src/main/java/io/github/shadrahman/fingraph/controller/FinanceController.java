@@ -3,6 +3,7 @@ package io.github.shadrahman.fingraph.controller;
 import io.github.shadrahman.fingraph.model.TransactionInput;
 import io.github.shadrahman.fingraph.model.TransactionPayload;
 import io.github.shadrahman.fingraph.service.AccountService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -16,7 +17,7 @@ public class FinanceController {
     private final AccountService accountService;
 
     @MutationMapping
-    public TransactionPayload createTransaction(@Argument TransactionInput input) {
+    public TransactionPayload createTransaction(@Valid @Argument TransactionInput input) {
         long amount = Math.round(input.amount() * CENTS_FACTOR);
 
         var updatedAccount = accountService.addTransaction(
