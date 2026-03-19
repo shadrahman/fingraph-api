@@ -32,6 +32,7 @@ type Account {
 type Transaction {
     id: ID!
     amount: Float!
+    type: TransactionType!
     description: String!
     category: Category!
     isSubscription: Boolean!
@@ -40,6 +41,7 @@ type Transaction {
 input TransactionInput {
     accountId: ID!
     amount: Float!
+    type: TransactionType!
     description: String!
     category: Category!
 }
@@ -60,4 +62,9 @@ enum Category {
     SHOPPING
     SUBSCRIPTION
     MISCELLANEOUS
+}
+
+enum TransactionType {
+    DEBIT
+    CREDIT
 }

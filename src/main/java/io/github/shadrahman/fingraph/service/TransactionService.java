@@ -2,6 +2,7 @@ package io.github.shadrahman.fingraph.service;
 
 import io.github.shadrahman.fingraph.model.Category;
 import io.github.shadrahman.fingraph.model.Transaction;
+import io.github.shadrahman.fingraph.model.TransactionType;
 import java.util.Map;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -36,13 +37,15 @@ public class TransactionService {
             Map.entry("bunnings", Category.SHOPPING)
     );
 
-    public Transaction createNewTransaction(Long amount, String description, Category userSuggestedCategory) {
+    public Transaction createNewTransaction(Long amount, TransactionType type, String description,
+                                            Category userSuggestedCategory) {
         Category finalCategory = determineCategory(description, userSuggestedCategory);
         boolean isSubscription = finalCategory == Category.SUBSCRIPTION;
 
         return new Transaction(
                 UUID.randomUUID().toString(),
                 amount,
+                type,
                 description,
                 finalCategory,
                 isSubscription

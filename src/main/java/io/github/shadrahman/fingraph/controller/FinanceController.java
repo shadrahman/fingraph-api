@@ -22,6 +22,7 @@ public class FinanceController {
         var updatedAccount = accountService.addTransaction(
                 input.accountId(),
                 amount,
+                input.type(),
                 input.description(),
                 input.category());
 

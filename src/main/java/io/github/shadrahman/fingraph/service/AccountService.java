@@ -4,6 +4,7 @@ import io.github.shadrahman.fingraph.model.Account;
 import io.github.shadrahman.fingraph.model.Category;
 import io.github.shadrahman.fingraph.model.TransactionInput;
 import io.github.shadrahman.fingraph.model.TransactionPayload;
+import io.github.shadrahman.fingraph.model.TransactionType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,14 +32,17 @@ public class AccountService {
         return accounts.get(id);
     }
 
-    public Account addTransaction(String accountId, Long amount, String description, Category category) {
+    public Account addTransaction(String accountId, Long amount, TransactionType type, String description,
+                                  Category category) {
         Account account = accounts.get(accountId);
 
         if (account != null) {
-            var newTransaction = transactionService.createNewTransaction(amount, description, category);
+            var newTransaction = transactionService.createNewTransaction(amount, type, description, category);
             var updatedHistory = new ArrayList<>(account.history());
             updatedHistory.add(0, newTransaction); // Add to the top of the list
-            var updatedBalance = account.balance() - amount;
+            var updatedBalance = TransactionType.CREDIT == type ?
+                    account.balance() + amount :
+                    account.balance() - amount;
             var updatedAccount = new Account(account.id(), account.userId(), account.name(), updatedBalance, updatedHistory);
 
             accounts.put(account.id(), updatedAccount);
