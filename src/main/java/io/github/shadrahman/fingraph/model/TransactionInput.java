@@ -2,7 +2,7 @@ package io.github.shadrahman.fingraph.model;
 
 public record TransactionInput(
         String accountId,
-        Long amount,
+        Double amount,
         String description,
         Category category
 ) {

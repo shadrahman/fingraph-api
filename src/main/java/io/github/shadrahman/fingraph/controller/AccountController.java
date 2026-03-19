@@ -22,11 +22,6 @@ public class AccountController {
         return accountService.getAccountById(id);
     }
 
-    @SchemaMapping(typeName = "Account", field = "balance")
-    public Double getBalanceInDollars(Account account) {
-        return account.balance() / (double) CENTS_FACTOR;
-    }
-
     @SchemaMapping(typeName = "Account", field = "history")
     public List<Transaction> getHistory(Account account, @Argument Integer limit) {
         var allTransactions = account.history();

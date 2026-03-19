@@ -43,7 +43,7 @@ public class UserController {
     public List<CategoryTotal> monthlySpending(User user) {
         return userService.getMonthlySpending(user.id())
                           .entrySet().stream()
-                          .map(entry -> new CategoryTotal(entry.getKey(), entry.getValue() / (double) CENTS_FACTOR))
+                          .map(entry -> new CategoryTotal(entry.getKey(), entry.getValue()))
                           .toList();
     }
 }
